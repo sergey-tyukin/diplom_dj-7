@@ -6,7 +6,7 @@ def cart_view(request):
 
 
 def empty_secition_view(request):
-    return render(request, 'app/empty_secition.html', {})
+    return render(request, 'app/empty_section.html', {})
 
 
 def index_view(request):

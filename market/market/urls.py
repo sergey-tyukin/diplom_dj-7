@@ -21,5 +21,10 @@ from app.views import cart_view, empty_secition_view, index_view,\
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index_view, name='main')
+    path('', index_view, name='main'),
+    path('cart', cart_view, name='cart'),
+    path('empty_section.html', empty_secition_view, name='empty_section'),
+    path('login.html', login_view, name='login'),
+    path('phone.html', phone_view, name='phone'),
+    path('smartphones.html', smartphones_view, name='smartphones'),
 ]
