@@ -6,14 +6,15 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>{% block header %}Просто магазин{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'app/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="{% static 'app/main.css' %}">
+  <link rel="stylesheet" href="{% static 'app/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'app/css/main.css' %}">
+  {% block additional_css %}{% endblock %}
 </head>
 <body class="" data-gr-c-s-loaded="true">
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
   <a class="navbar-brand" href="{% url 'main' %}">Просто магазин</a>
-  <img src="{% static 'app/logo.svg' %}" alt="" width="42" height="42">
+  <img src="{% static 'app/images/logo.svg' %}" alt="" width="42" height="42">
   <button class="navbar-toggler" type="button" data-toggle="collapse"
           data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
           aria-expanded="false" aria-label="Toggle navigation">
@@ -67,8 +68,8 @@
   <p>© Просто магазин 2018</p>
 </footer>
 
-<script src="{% static 'app/jquery-3.3.1.slim.min.js' %}"></script>
-<script src="{% static 'app/popper.min.js' %}"></script>
-<script src="{% static 'app/bootstrap.min.js' %}"></script>
+<script src="{% static 'app/js/jquery-3.3.1.slim.min.js' %}"></script>
+<script src="{% static 'app/js/popper.min.js' %}"></script>
+<script src="{% static 'app/js/bootstrap.min.js' %}"></script>
 </body>
 </html>

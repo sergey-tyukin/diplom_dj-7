@@ -3,22 +3,21 @@
 
 {% block title %}Главная страница{% endblock %}
 
-{% block content %}
-<main role="main">
-  <div class="container" style="width: 30%">
-    <form class="form-signin" >
-      <input type="hidden" name="next" value="">
-      <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
-      <label for="inputEmail" class="sr-only">Email</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email" name="username"
-             value="" required="" autofocus="" data-cip-id="inputEmail">
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Пароль"
-             name="password" required="" data-cip-id="inputPassword">
+{% block additional_css %}<link rel="stylesheet" href="{% static 'app/css/login.css' %}">{% endblock %}
 
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
-      <p class="mt-5 mb-3 text-muted">© Просто магазин 2018</p>
-    </form>
-  </div>
-</main>
+{% block content %}
+<form class="form-signin" >
+  <input type="hidden" name="next" value="">
+  <img class="mb-4" src="{% static 'app/images/logo.svg' %}" alt="" width="72" height="72">
+
+  <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
+  <label for="inputEmail" class="sr-only">Email</label>
+  <input type="email" id="inputEmail" class="form-control" placeholder="Email" name="username"
+         value="" required="" autofocus="" data-cip-id="inputEmail">
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input type="password" id="inputPassword" class="form-control" placeholder="Пароль"
+         name="password" required="" data-cip-id="inputPassword">
+
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+</form>
 {% endblock %}
