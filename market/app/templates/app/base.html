@@ -28,24 +28,43 @@
           Главная</a>
       </li>
 
+      {% for category in categories %}
+        {% if category.subcategories.all %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown01"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ category }}</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+            {% for subcategory in category.subcategories.all %}
+              <a class="dropdown-item" href="{% url 'smartphones' %}">{{ subcategory }}</a>
+          {% endfor %}
+                  </div>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'empty_section' %}">
+              {{ category }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
 
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown01"
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Гаджеты</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
+<!--      <li class="nav-item dropdown">-->
+<!--        <a class="nav-link dropdown-toggle" href="#" id="dropdown01"-->
+<!--           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--          Гаджеты</a>-->
+<!--        <div class="dropdown-menu" aria-labelledby="dropdown01">-->
 
-          <a class="dropdown-item" href="{% url 'smartphones' %}">
-            Сматрфоны</a>
+<!--          <a class="dropdown-item" href="{% url 'smartphones' %}">-->
+<!--            Сматрфоны</a>-->
 
-        </div>
-      </li>
+<!--        </div>-->
+<!--      </li>-->
 
 
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'empty_section' %}">
-          Аксесcуары</a>
-      </li>
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="{% url 'empty_section' %}">-->
+<!--          Аксесcуары</a>-->
+<!--      </li>-->
 
 
     </ul>
