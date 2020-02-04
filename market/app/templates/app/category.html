@@ -1,0 +1,44 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<main role="main">
+  <div class="container">
+    <h1>{{ category }}</h1>
+    <div class="row">
+    {% for product in products %}
+      {% if forloop.counter0|divisibleby:"3" %}
+        </div>
+        <div class="row">
+      {% endif %}
+      <div class="col-md-4">
+        <h2>{{ product }}</h2>
+        <a href="{% url 'product' product.slug %}">
+
+          <img src="{% static 'app/images/'|add:product.picture_path %}" width="180">
+
+        </a>
+
+        <form>
+          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        </form>
+      </div>
+    {% endfor %}
+    </div>
+
+    <div class="row">
+      <div class="col-md-5"></div>
+      <div class="col-md-2">Страницы:
+        {% if prev_page_url %}<a class="button button-primary" href="{{ prev_page_url }}">{{ current_page|add:"-1" }}</a>{% endif %}
+        {{ current_page }}
+        {% if next_page_url %}<a class="button button-primary" href="{{ next_page_url }}">{{ current_page|add:"1" }}</a>{% endif %}
+      </div>
+      <div class="col-md-5"></div>
+    </div>
+  </div> <!-- /container -->
+
+  </div>
+</main>
+{% endblock %}

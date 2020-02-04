@@ -16,15 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app.views import cart_view, empty_secition_view, index_view,\
-    login_view, phone_view, smartphones_view
+from app.views import cart_view, index_view,\
+    login_view, phone_view, category_view, product_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index_view, name='main'),
+    path('category/<str:category>', category_view, name='category'),
+    path('product/<str:product>', product_view, name='product'),
     path('cart', cart_view, name='cart'),
-    path('empty_section.html', empty_secition_view, name='empty_section'),
+    # path('empty_section.html', empty_secition_view, name='empty_section'),
     path('login.html', login_view, name='login'),
     path('phone.html', phone_view, name='phone'),
-    path('smartphones.html', smartphones_view, name='smartphones'),
+    # path('smartphones.html', smartphones_view, name='smartphones'),
 ]
