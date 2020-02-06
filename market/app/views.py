@@ -10,7 +10,7 @@ from .models import ProductCategory, Product, Article
 def index_view(request):
     template = 'app/index.html'
 
-    articles = Article.objects.all()
+    articles = Article.objects.prefetch_related('products').all()
     context = {'articles': articles}
 
     return render(request, template, context)
