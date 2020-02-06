@@ -4,12 +4,14 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.urls import reverse
 
-from .models import ProductCategory, Product
+from .models import ProductCategory, Product, Article
 
 
 def index_view(request):
-    context = {}
     template = 'app/index.html'
+
+    articles = Article.objects.all()
+    context = {'articles': articles}
 
     return render(request, template, context)
 

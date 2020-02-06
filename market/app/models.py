@@ -1,5 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
 from pytils.translit import slugify
+
+
+class User(AbstractUser):
+    pass
 
 
 class ProductCategory(models.Model):
@@ -38,3 +44,18 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+
+
+class Article(models.Model):
+    name = models.CharField(max_length=256)
+    text = models.CharField(max_length=4096)
+    date = models.DateField()
+    products = models.ManyToManyField(Product, related_name='article')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Статья"
+        verbose_name_plural = "Статьи"
+        ordering = ['-date', 'name']
