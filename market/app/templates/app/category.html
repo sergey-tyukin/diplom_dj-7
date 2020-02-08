@@ -14,16 +14,7 @@
         <div class="row">
       {% endif %}
       <div class="col-md-4">
-        <h2>{{ product }}</h2>
-        <a href="{% url 'product' product.slug %}">
-
-          <img src="{% static 'app/images/'|add:product.picture_path %}" width="180">
-
-        </a>
-
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
-        </form>
+        {% include 'app/product_cart.html' %}
       </div>
     {% endfor %}
     </div>

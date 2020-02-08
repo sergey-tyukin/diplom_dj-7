@@ -50,12 +50,15 @@
 
 
     </ul>
-
+    <div style="color:white; margin-right: 20px">
+      Пользователь: <b>
     {% if request.user.is_authenticated %}
       {{ user.get_username }}
     {% else %}
       Гость
     {% endif %}
+      </b>
+    </div>
 
     <a class="btn btn-outline-success my-2 my-sm-0" role="button"
        href="{% url 'cart' %}">

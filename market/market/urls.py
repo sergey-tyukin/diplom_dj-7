@@ -19,7 +19,7 @@ from django.conf import settings
 from django.contrib.auth import views as auth_views
 
 from app.views import cart_view, index_view,\
-    login_view, phone_view, category_view, product_view
+    login_view, category_view, product_view
 
 
 
@@ -31,9 +31,10 @@ urlpatterns = [
     path('cart', cart_view, name='cart'),
     # path('empty_section.html', empty_secition_view, name='empty_section'),
     # path('login.html', login_view, name='login'),
-    path('login/', auth_views.LoginView.as_view(), name='login'),
+    # path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('login/', login_view, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('phone.html', phone_view, name='phone'),
+    # path('phone.html', phone_view, name='phone'),
     # path('smartphones.html', smartphones_view, name='smartphones'),
 ]
 

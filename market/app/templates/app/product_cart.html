@@ -1,0 +1,14 @@
+{% load static %}
+
+<h2>{{ product }}</h2>
+<a href="{% url 'product' product.slug %}">
+  <img src="{% static 'app/images/'|add:product.picture_path %}" width="180">
+</a>
+{% if request.path|slice:"9" == '/product/' %}
+    <p>{{ product.description }}</p>
+{% endif %}
+<form method="post" action="{% url 'cart' %}">
+    {% csrf_token %}
+    <input type="hidden" name="product_name" value="{{ product.slug }}">
+    <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+</form>

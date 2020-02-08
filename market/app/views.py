@@ -1,10 +1,12 @@
+import json
 from urllib.parse import urlencode
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
 
-from .models import ProductCategory, Product, Article
+from .models import ProductCategory, Product, Article, User
 
 
 def index_view(request):
@@ -63,13 +65,52 @@ def product_view(request, product_slug):
 
 
 def cart_view(request):
-    return render(request, 'app/cart.html', {})
+    template = 'app/cart.html'
+    context = {}
+
+    if request.user.is_authenticated:
+        response = render(request, template, context)
+
+    else:
+        cart_list_str = request.COOKIES.get('cart_list')
+        cart_list = json.loads(cart_list_str) if cart_list_str else {}
+        product = request.POST.get('product_name')
+
+        if product:
+            cart_list[product] = cart_list.get(product, 0) + 1
+
+        context['cart_list'] = []
+        for item, count in cart_list.items():
+            context['cart_list'].append((Product.objects.get(slug=item), count))
+
+        response = render(request, template, context)
+        response.set_cookie('cart_list', json.dumps(cart_list))
+
+    return response
 
 
 def login_view(request):
-    return render(request, 'app/login.html', {})
+    template = 'registration/login.html'
+    context = {}
+    if request.method == 'GET':
+        return render(request, template, context)
+
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        context['error'] = 'Такого пользователя не существует'
+        return render(request, template, context)
+    else:
+        user = authenticate(username=user, password=password)
+        if user:
+            login(request, user)
+            return redirect(index_view)
+        else:
+            context['error'] = 'Пароль неверен'
+            return render(request, template, context)
 
 
-def phone_view(request):
-    return render(request, 'app/phone.html', {})
 

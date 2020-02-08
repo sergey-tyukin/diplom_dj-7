@@ -11,14 +11,10 @@
   <img class="mb-4" src="{% static 'app/images/logo.svg' %}" alt="" width="72" height="72">
   {% csrf_token %}
 
-  {% if form.errors %}
-    <p>Пользователь с данным E-mail и паролем не найден!</p>
-  {% endif %}
-
   <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
-
+  <p style="color:red">{{ error }}</p>
   <label for="id_username" class="sr-only">Email</label>
-  <input type="text" id="id_username" class="form-control" placeholder="Email" name="username"
+  <input type="text" id="id_username" class="form-control" placeholder="Email" name="email"
          value="" autofocus="" required="" data-cip-id="inputEmail">
 
   <label for="id_password" class="sr-only">Password</label>
