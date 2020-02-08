@@ -130,7 +130,7 @@ INTERNAL_IPS = [
 ]
 
 AUTH_USER_MODEL = 'app.User'
-# AUTHENTICATION_BACKENDS = ['app.authentication_backends.EmailBackend']
+AUTHENTICATION_BACKENDS = ['app.authentication_backends.EmailBackend']
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
