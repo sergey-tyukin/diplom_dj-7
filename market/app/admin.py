@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.safestring import mark_safe
 
-from .models import ProductCategory, Product, Article, User, Order
+from .models import ProductCategory, Product, Article, User, Order, ProductInOrder
 
 
 admin.site.register(User, UserAdmin)
@@ -30,10 +31,21 @@ class ArticleAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'date', 'user', 'product_count']
+    list_display = ['id', 'date', 'user', 'product_count', 'children_display']
     list_filter = ['user']
     search_fields = ['date']
+
+    def children_display(self, obj):
+        display_text = f"<a href=http://127.0.0.1:8000/admin/app/productinorder/?order__id__exact={obj.id}>Детали заказа</a>"
+        if display_text:
+            return mark_safe(display_text)
+        return "-"
 
     def product_count(self, obj):
         return obj.product.count()
 
+
+@admin.register(ProductInOrder)
+class ProductInOrderAdmin(admin.ModelAdmin):
+    list_display = ['product', 'count']
+    list_filter = ['order']

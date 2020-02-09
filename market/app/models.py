@@ -2,6 +2,8 @@ from django.utils import timezone
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.template.defaultfilters import escape
+from django.urls import reverse
 
 from pytils.translit import slugify
 
@@ -78,6 +80,12 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    # def order_details(self):
+    #     return '<a href="http://ya.ru">Детали заказа</a>'
+    #
+    # order_details.allow_tags = True
+    # order_details.short_description = "User"
 
     class Meta:
         verbose_name = "Заказ"
