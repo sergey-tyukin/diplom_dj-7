@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import ProductCategory, Product, Article, User
+from .models import ProductCategory, Product, Article, User, Order
 
 
 admin.site.register(User, UserAdmin)
@@ -26,3 +26,14 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'date', 'user', 'product_count']
+    list_filter = ['user']
+    search_fields = ['date']
+
+    def product_count(self, obj):
+        return obj.product.count()
+

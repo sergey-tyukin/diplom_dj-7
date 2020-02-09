@@ -12,6 +12,13 @@
         <span class="text-muted">Ваша корзина</span>
         <span class="badge badge-secondary badge-pill"> {{ cart_list|length }}</span>
       </h4>
+
+      {% if messages %}
+            {% for message in messages %}
+            <p style="color:green">{{ message }}</p>
+            {% endfor %}
+      {% endif %}
+
       <ul class="list-group mb-3">
 
         {% for item in cart_list %}
@@ -26,9 +33,14 @@
 
       </ul>
 
-      <form class="card p-2">
-        <button type="submit" class="btn btn-secondary">Заказать</button>
-      </form>
+      {% if user.is_authenticated %}
+        <form class="card p-2" method="post" action="{% url 'checkout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary">Заказать</button>
+        </form>
+      {% else %}
+      <p>Для оформленяи заказа сначала <a href="{% url 'login' %}">зайдите</a> под своей учетной записью</p>
+      {% endif %}
     </div>
   </div>
 

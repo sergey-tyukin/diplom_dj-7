@@ -4,10 +4,14 @@ from urllib.parse import urlencode
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.urls import reverse
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
-from .models import ProductCategory, Product, Article, User, ProductInCart
+
+from .models import ProductCategory, Product, Article, User, ProductInCart, Order, ProductInOrder
 from .auxiliary_functions import get_cart_by_user
+
 
 def index_view(request):
     template = 'app/index.html'
@@ -145,3 +149,20 @@ def login_view(request):
         context['error'] = 'Пароль неверен'
 
     return render(request, template, context)
+
+
+@login_required()
+def checkout_view(request):
+    user = request.user
+
+    items = ProductInCart.objects.filter(user=user)
+    order = Order.objects.create(user=user)
+    for item in items:
+        ProductInOrder.objects.create(order=order,
+                                      product=item.product,
+                                      count=item.count)
+
+    ProductInCart.objects.filter(user=user).delete()
+
+    messages.success(request, 'Ваш заказ оформлен')
+    return redirect('cart')

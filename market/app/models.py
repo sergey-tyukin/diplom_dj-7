@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -66,4 +68,24 @@ class Article(models.Model):
 class ProductInCart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_position')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_position')
+    count = models.IntegerField()
+
+
+class Order(models.Model):
+    date = models.DateField(default=timezone.now())
+    product = models.ManyToManyField(Product, through='ProductInOrder', related_name='order')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='order_position')
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+        ordering = ['-date', 'user']
+
+
+class ProductInOrder(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_position')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_position')
     count = models.IntegerField()
