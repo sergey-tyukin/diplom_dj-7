@@ -6,8 +6,8 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 
-from .models import ProductCategory, Product, Article, User
-
+from .models import ProductCategory, Product, Article, User, ProductInCart
+from .auxiliary_functions import get_cart_by_user
 
 def index_view(request):
     template = 'app/index.html'
@@ -67,17 +67,35 @@ def product_view(request, product_slug):
 def cart_view(request):
     template = 'app/cart.html'
     context = {}
+    product_slug = request.POST.get('product_name')
+    user = request.user
 
+    # Authenticated user
     if request.user.is_authenticated:
-        response = render(request, template, context)
+        if product_slug:
+            product = Product.objects.get(slug=product_slug)
+            try:
+                product_in_cart = ProductInCart.objects.get(user=user, product=product)
+            except ProductInCart.DoesNotExist:
+                ProductInCart.objects.create(user=user,
+                                             product=product,
+                                             count=1)
+            else:
+                product_in_cart.count += 1
+                product_in_cart.save()
 
+        context['cart_list'] = get_cart_by_user(user)
+
+        response = render(request, template, context)
+        response.delete_cookie('cart_list')
+
+    # Anonymous user
     else:
         cart_list_str = request.COOKIES.get('cart_list')
         cart_list = json.loads(cart_list_str) if cart_list_str else {}
-        product = request.POST.get('product_name')
 
-        if product:
-            cart_list[product] = cart_list.get(product, 0) + 1
+        if product_slug:
+            cart_list[product_slug] = cart_list.get(product_slug, 0) + 1
 
         context['cart_list'] = []
         for item, count in cart_list.items():
@@ -95,22 +113,35 @@ def login_view(request):
     if request.method == 'GET':
         return render(request, template, context)
 
-    email = request.POST.get('email')
+    email = request.POST.get('email').strip()
     password = request.POST.get('password')
 
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
+    if not User.objects.filter(email=email).exists():
         context['error'] = 'Такого пользователя не существует'
-        return render(request, template, context)
     else:
-        user = authenticate(username=user, password=password)
+        user = authenticate(request, username=User.objects.get(email=email), password=password)
         if user:
             login(request, user)
+
+            cart_list_str = request.COOKIES.get('cart_list')
+            cart_list = json.loads(cart_list_str) if cart_list_str else {}
+
+            for item, count in cart_list.items():
+                try:
+                    product_in_cart = ProductInCart.objects.get(product__slug=item)
+                except ProductInCart.DoesNotExist:
+                    ProductInCart.objects.create(user=user,
+                                                 product=Product.objects.get(slug=item),
+                                                 count=count)
+                else:
+                    product_in_cart.count += count
+                    product_in_cart.save()
+
+            context['cart_list'] = []
+            for item, count in cart_list.items():
+                context['cart_list'].append((Product.objects.get(slug=item), count))
+
             return redirect(index_view)
-        else:
-            context['error'] = 'Пароль неверен'
-            return render(request, template, context)
+        context['error'] = 'Пароль неверен'
 
-
-
+    return render(request, template, context)

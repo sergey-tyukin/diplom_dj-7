@@ -33,6 +33,8 @@ class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.SET_NULL,
                                  blank=True, null=True, related_name='product')
     slug = models.SlugField(max_length=64, blank=True)
+    cart_user = models.ManyToManyField(User, related_name='cart_product',
+                                       through='ProductInCart')
 
     def __str__(self):
         return self.name
@@ -59,3 +61,9 @@ class Article(models.Model):
         verbose_name = "Статья"
         verbose_name_plural = "Статьи"
         ordering = ['-date', 'name']
+
+
+class ProductInCart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_position')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_position')
+    count = models.IntegerField()
