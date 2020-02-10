@@ -1,5 +1,6 @@
 {% extends 'app/base.html' %}
 {% load static %}
+{% load review_rating %}
 
 {% block title %}Главная страница{% endblock %}
 
@@ -8,7 +9,6 @@
 
 
   <div class="container mt-3">
-    <!-- Example row of columns -->
     <div class="row">
       <div class="col-md-12">
         {% include 'app/product_cart.html' %}
@@ -16,26 +16,41 @@
     </div>
     <hr>
 
-    ★★★★★ <span>Вася</span>
-    <p> Хороший отзыв</p>
-
-    ★★ <span>Петя</span>
-    <p> Плохой отзыв</p>
+    {% if reviews %}
+    <h2>Отзывы</h2>
+      {% for review in reviews %}
+        {{ '★'|mul:review.rating }} <span><b>{{ review.name }}</b></span>
+        <p>{{ review.text}}</p>
+      {% endfor %}
+    {% else %}
+      <p>Отзывов пока нет</p>
+    {% endif %}
 
     <hr>
 
     <div class="row">
       <div class="col-lg-6 col-md-8 col-sm-12">
+      {% if messages %}
+        {% for message in messages %}
+        <p style="color:red">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+
         <h4>Оставте отзыв:</h4>
 
-        <form action="./merch/1/feedback" method="post">
-          <input type="hidden" name="csrfmiddlewaretoken"
-                 value="N4vcBqzjoYkU7OTDuAT8hq8srpvYX44nJsswuP7e3EYg0Hq8DgxuR0eiXWbSr5RZ">
+        <form action="{% url 'review' product.slug %}" method="post">
+          {% csrf_token %}
+          {% if request.user.is_authenticated %}
+          <p>Имя: <b>{{ request.user }}</b></p>
+            <input type="hidden" name="name" value="{{ request.user }}">
+
+          {% else %}
           <div class="form-group">
             <label for="name">Имя</label>
             <input type="text" class="form-control" id="name" aria-describedby="nameHelp"
                    placeholder="Представтесь" name="name" data-cip-id="name">
           </div>
+          {% endif %}
           <div class="form-group">
             <label for="content">Содержание</label>
             <textarea class="form-control" id="content" placeholder="Содержание"

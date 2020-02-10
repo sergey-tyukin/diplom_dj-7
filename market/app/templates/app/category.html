@@ -7,16 +7,18 @@
 <main role="main">
   <div class="container">
     <h1>{{ category }}</h1>
+
     <div class="row">
-    {% for product in products %}
-      {% if forloop.counter0|divisibleby:"3" %}
+    {% if products %}
+      {% for product in products %}
+        {% if forloop.counter0|divisibleby:"3" %}
+          </div>
+          <div class="row">
+        {% endif %}
+        <div class="col-md-4">
+          {% include 'app/product_cart.html' %}
         </div>
-        <div class="row">
-      {% endif %}
-      <div class="col-md-4">
-        {% include 'app/product_cart.html' %}
-      </div>
-    {% endfor %}
+      {% endfor %}
     </div>
 
     <div class="row">
@@ -25,6 +27,10 @@
         {% if prev_page_url %}<a class="button button-primary" href="{{ prev_page_url }}">{{ current_page|add:"-1" }}</a>{% endif %}
         {{ current_page }}
         {% if next_page_url %}<a class="button button-primary" href="{{ next_page_url }}">{{ current_page|add:"1" }}</a>{% endif %}
+      {% else %}
+        <p>Товаров в данной категории сейчас нет, но они обязательно скоро появятся!</p>
+      {% endif %}
+
       </div>
       <div class="col-md-5"></div>
     </div>

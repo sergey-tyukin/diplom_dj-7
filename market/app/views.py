@@ -7,9 +7,10 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
-
-from .models import ProductCategory, Product, Article, User, ProductInCart, Order, ProductInOrder
+from .models import ProductCategory, Product, Article, User, ProductInCart,\
+    Order, ProductInOrder, Review
 from .auxiliary_functions import get_cart_by_user
 
 
@@ -62,8 +63,10 @@ def category_view(request, category_slug):
 
 def product_view(request, product_slug):
     product = Product.objects.get(slug=product_slug)
+    reviews = Review.objects.filter(product=product)
     template = 'app/product.html'
-    context = {'product': product}
+    context = {'product': product,
+               'reviews': reviews}
 
     return render(request, template, context)
 
@@ -166,3 +169,20 @@ def checkout_view(request):
 
     messages.success(request, 'Ваш заказ оформлен')
     return redirect('cart')
+
+
+def review_view(request, product_slug):
+    review_author = request.POST.get('name')
+    review_text = request.POST.get('description')
+    review_mark = request.POST.get('mark', 0)
+    review_product = Product.objects.get(slug=product_slug)
+
+    if review_author and review_text and review_product:
+        Review.objects.create(name=review_author,
+                              text=review_text,
+                              rating=review_mark,
+                              product=review_product)
+    else:
+        messages.error(request, 'Ошибка, заполните информацию полностью!')
+
+    return redirect(reverse(product_view, args=[product_slug]))

@@ -97,3 +97,10 @@ class ProductInOrder(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_position')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_position')
     count = models.IntegerField()
+
+
+class Review(models.Model):
+    name = models.CharField(max_length=128)
+    text = models.CharField(max_length=1024)
+    rating = models.IntegerField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)

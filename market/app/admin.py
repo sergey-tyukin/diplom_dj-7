@@ -29,11 +29,22 @@ class ArticleAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(ProductInOrder)
+class ProductInOrderAdmin2(admin.ModelAdmin):
+    list_display = ['product', 'count']
+    list_filter = ['order']
+
+
+class ProductInOrderAdmin(admin.TabularInline):
+    model = ProductInOrder
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'date', 'user', 'product_count', 'children_display']
     list_filter = ['user']
     search_fields = ['date']
+    inlines = [ ProductInOrderAdmin ]
 
     def children_display(self, obj):
         display_text = f"<a href=http://127.0.0.1:8000/admin/app/productinorder/?order__id__exact={obj.id}>Детали заказа</a>"
@@ -45,7 +56,3 @@ class OrderAdmin(admin.ModelAdmin):
         return obj.product.count()
 
 
-@admin.register(ProductInOrder)
-class ProductInOrderAdmin(admin.ModelAdmin):
-    list_display = ['product', 'count']
-    list_filter = ['order']
